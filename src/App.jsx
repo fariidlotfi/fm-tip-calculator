@@ -1,169 +1,134 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [bill, setBill] = useState(null);
-  const [tip, setTip] = useState(null);
+  const [bill, setBill] = useState(0);
+  const [tip, setTip] = useState(0);
   const [count, setCount] = useState(1);
-  const [total, setTotal] = useState(null);
-  const [tipAmount, setTipAmount] = useState(null);
-
-  const customTipRef = useRef();
+  const [total, setTotal] = useState(0);
+  const [tipAmount, setTipAmount] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+  const tipsAmount = [5, 10, 15, 25, 50];
 
   useEffect(() => {
-    let res = 0;
-    if (bill && tip) {
-      res = (bill * (tip / 100)).toFixed(2);
+    const res = (parseFloat(bill) * (parseFloat(tip) / 100)).toFixed(2);
 
-      count > 1
-        ? setTipAmount((parseFloat(res) / count).toFixed(2))
-        : setTipAmount(parseFloat(res).toFixed(2));
-
-      count > 1
-        ? setTotal(
-            (
-              (parseFloat(bill) + parseFloat(res)).toFixed(2) / parseInt(count)
-            ).toFixed(2)
-          )
-        : setTotal((parseFloat(bill) + parseFloat(res)).toFixed(2));
+    if (count > 1) {
+      setTipAmount((parseFloat(res) / count).toFixed(2));
+      setTotal(
+        ((parseFloat(bill) + parseFloat(res)) / Number(count)).toFixed(2)
+      );
+    } else {
+      setTipAmount(parseFloat(res).toFixed(2));
+      setTotal((parseFloat(bill) + parseFloat(res)).toFixed(2));
     }
   }, [bill, tip, count]);
 
+  function handleTipInput() {
+    return (event) => {
+      setTip(parseInt(event.target.value));
+      setInputValue(event.target.value);
+    };
+  }
+
+  function handleTipButtons(tip) {
+    setTip(tip);
+    setInputValue("");
+  }
+
+  function reset() {
+    setBill(0);
+    setCount(1);
+    setTip(0);
+    setTipAmount("0.00");
+    setTotal("0.00");
+    setInputValue("");
+  }
+
   return (
-    <>
-      <main className="app">
-        <section className="inputs">
-          <section className="bill-inputs">
-            <label htmlFor="bill">Bill</label>
+    <main className="app">
+      <section className="inputs">
+        <section className="bill-inputs">
+          <label htmlFor="bill">Bill</label>
+          <input
+            min={0}
+            type="number"
+            name="bill"
+            value={bill}
+            onChange={(e) => setBill(e.target.value)}
+          />
+          <img
+            src="/fm-tip-calculator/icon-dollar.svg"
+            alt="dollar icon"
+            className="dollar-icon"
+          />
+        </section>
+
+        <section className="tips">
+          <label>Select Tip %</label>
+          <section className="tip_buttons">
+            {tipsAmount.map((amount) => (
+              <button
+                key={amount}
+                className={`tip-button ${tip === amount ? "active" : ""}`}
+                onClick={() => handleTipButtons(amount)}
+              >
+                {amount}%
+              </button>
+            ))}
+
             <input
               min={0}
+              max={100}
               type="number"
-              name="bill"
-              value={bill}
-              onChange={(e) => setBill(e.target.value)}
-            />
-            <img
-              src="/fm-tip-calculator/icon-dollar.svg"
-              alt="dollar icon"
-              className="dollar-icon"
-            />
-          </section>
-
-          <section className="tips">
-            <label>Select Tip %</label>
-            <section className="tip_buttons">
-              <button
-                className={`tip-button ${tip == 5 ? "active" : ""}`}
-                onClick={() => {
-                  setTip(5);
-                  customTipRef.current.value = "";
-                }}
-              >
-                5%
-              </button>
-              <button
-                className={`tip-button ${tip == 10 ? "active" : ""}`}
-                onClick={() => {
-                  setTip(10);
-                  customTipRef.current.value = "";
-                }}
-              >
-                10%
-              </button>
-              <button
-                className={`tip-button ${tip == 15 ? "active" : ""}`}
-                onClick={() => {
-                  setTip(15);
-                  customTipRef.current.value = "";
-                }}
-              >
-                15%
-              </button>
-              <button
-                className={`tip-button ${tip == 25 ? "active" : ""}`}
-                onClick={() => {
-                  setTip(25);
-                  customTipRef.current.value = "";
-                }}
-              >
-                25%
-              </button>
-              <button
-                className={`tip-button ${tip == 50 ? "active" : ""}`}
-                onClick={() => {
-                  setTip(50);
-                  customTipRef.current.value = "";
-                }}
-              >
-                50%
-              </button>
-              <input
-                min={0}
-                max={100}
-                type="number"
-                ref={customTipRef}
-                onChange={(e) => setTip(e.target.value)}
-                placeholder="Custom"
-                className="tip-input"
-              />
-            </section>
-          </section>
-
-          <section className="people-inputs">
-            <label htmlFor="count">Number of People</label>
-            <input
-              min={0}
-              className={count <= 0 ? "error" : ""}
-              name="count"
-              type="number"
-              value={count}
-              onChange={(e) => setCount(e.target.value)}
-            />
-            {count <= 0 ? (
-              <span className="count-error">Cant be zero</span>
-            ) : (
-              ""
-            )}
-            <img
-              src="/fm-tip-calculator/icon-person.svg"
-              alt="person icon"
-              className="person-icon"
+              value={inputValue}
+              onChange={handleTipInput()}
+              placeholder="Custom"
+              className="tip-input"
             />
           </section>
         </section>
 
-        <section className="output">
-          <section className="tip-amount-section">
-            <section>
-              <p className="output-title-text">Tip Amount</p>
-              <p className="output-subtitle-text">/ person</p>
-            </section>
-            <h1 className="show-result">{tipAmount ?? "0"}</h1>
-          </section>
-          <section className="tip-amount-section">
-            <section>
-              <p className="output-title-text">Total</p>
-              <p className="output-subtitle-text">/ person</p>
-            </section>
-            <h1 className="show-result">{total ?? "0"}</h1>
-          </section>
-
-          <button
-            className="reset-button"
-            onClick={() => {
-              setBill(0);
-              setCount(1);
-              setTip(0);
-              setTipAmount(0);
-              setTotal(0);
-              customTipRef.current.value = "";
-            }}
-          >
-            RESET
-          </button>
+        <section className="people-inputs">
+          <label htmlFor="count">Number of People</label>
+          <input
+            min={0}
+            className={count <= 0 ? "error" : ""}
+            name="count"
+            type="number"
+            value={count}
+            onChange={(e) => setCount(e.target.value)}
+          />
+          {count <= 0 && <span className="count-error">Cant be zero</span>}
+          <img
+            src="/fm-tip-calculator/icon-person.svg"
+            alt="person icon"
+            className="person-icon"
+          />
         </section>
-      </main>
-    </>
+      </section>
+
+      <section className="output">
+        <section className="tip-amount-section">
+          <section>
+            <p className="output-title-text">Tip Amount</p>
+            <p className="output-subtitle-text">/ person</p>
+          </section>
+          <h1 className="show-result">{tipAmount}</h1>
+        </section>
+        <section className="tip-amount-section">
+          <section>
+            <p className="output-title-text">Total</p>
+            <p className="output-subtitle-text">/ person</p>
+          </section>
+          <h1 className="show-result">{total}</h1>
+        </section>
+
+        <button className="reset-button" onClick={reset}>
+          RESET
+        </button>
+      </section>
+    </main>
   );
 }
 
