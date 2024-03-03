@@ -6,7 +6,7 @@ function App() {
   const [tip, setTip] = useState(null);
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(null);
-  const [tipAmout, setTipAmount] = useState(null);
+  const [tipAmount, setTipAmount] = useState(null);
 
   const customTipRef = useRef();
 
@@ -43,13 +43,13 @@ function App() {
               onChange={(e) => setBill(e.target.value)}
             />
             <img
-              src="icon-dollar.svg"
+              src="/fm-tip-calculator/icon-dollar.svg"
               alt="dollar icon"
               className="dollar-icon"
             />
           </section>
 
-          <section className="tip-inputs">
+          <section className="tips">
             <label>Select Tip %</label>
             <section className="tip_buttons">
               <button
@@ -104,6 +104,7 @@ function App() {
                 ref={customTipRef}
                 onChange={(e) => setTip(e.target.value)}
                 placeholder="Custom"
+                className="tip-input"
               />
             </section>
           </section>
@@ -124,7 +125,7 @@ function App() {
               ""
             )}
             <img
-              src="icon-person.svg"
+              src="/fm-tip-calculator/icon-person.svg"
               alt="person icon"
               className="person-icon"
             />
@@ -137,7 +138,7 @@ function App() {
               <p className="output-title-text">Tip Amount</p>
               <p className="output-subtitle-text">/ person</p>
             </section>
-            <h1 className="show-result">{tipAmout ?? "0"}</h1>
+            <h1 className="show-result">{tipAmount ?? "0"}</h1>
           </section>
           <section className="tip-amount-section">
             <section>
@@ -155,6 +156,7 @@ function App() {
               setTip(0);
               setTipAmount(0);
               setTotal(0);
+              customTipRef.current.value = "";
             }}
           >
             RESET
