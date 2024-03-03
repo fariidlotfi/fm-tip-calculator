@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const tipsAmount = [5, 10, 15, 25, 50];
 
-  useEffect(() => {
+  const handleCalculating = useCallback(() => {
     const res = (parseFloat(bill) * (parseFloat(tip) / 100)).toFixed(2);
 
     if (count > 1) {
@@ -23,6 +23,10 @@ function App() {
       setTotal((parseFloat(bill) + parseFloat(res)).toFixed(2));
     }
   }, [bill, tip, count]);
+
+  useEffect(() => {
+    handleCalculating();
+  }, [handleCalculating]);
 
   function handleTipInput() {
     return (event) => {
@@ -55,7 +59,7 @@ function App() {
             type="number"
             name="bill"
             value={bill}
-            onChange={(e) => setBill(e.target.value)}
+            onChange={(e) => setBill(parseInt(e.target.value))}
           />
           <img
             src="/fm-tip-calculator/icon-dollar.svg"
