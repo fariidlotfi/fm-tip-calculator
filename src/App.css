@@ -76,7 +76,7 @@ input:focus {
   width: 50%;
 }
 
-.tip-inputs {
+.tips {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -89,7 +89,8 @@ input:focus {
 }
 
 .tip-button {
-  padding: 10px;
+  height: 40px;
+  text-align: center;
   background: hsl(183, 100%, 15%);
   color: white;
   border: none;
@@ -106,6 +107,24 @@ input:focus {
   -moz-transition: all 300ms ease;
   -ms-transition: all 300ms ease;
   -o-transition: all 300ms ease;
+}
+
+.tip-input {
+  height: 40px;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-weight: 800;
+  transition: all 50ms ease;
+  border-radius: 4px;
+  background: hsl(189, 41%, 97%);
+  padding: 0;
+  border: 2px solid transparent;
+}
+
+.tip-input:focus {
+  outline: none;
+  border-color: hsl(172, 67%, 45%);
 }
 
 .tip-button:hover {
